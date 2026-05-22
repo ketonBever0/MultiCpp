@@ -29,6 +29,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         csvtablemodel.h csvtablemodel.cpp
         csvtablemodel.cpp
         student.h student.cpp
+        addrowdialog.h addrowdialog.cpp addrowdialog.ui
 
 
     )

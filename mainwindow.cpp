@@ -39,8 +39,50 @@ void MainWindow::updateWindowTitle(bool modified = false) {
     setWindowTitle(title);
 }
 
-void saveFile() {
-    // TODO: Implement
+void MainWindow::saveFileAs() {
+    QString fileName = QFileDialog::getSaveFileName(
+        this,
+        "Save As",
+        "",
+        "CSV Files (*.csv)"
+    );
+
+    if (fileName.isEmpty()) return;
+
+    currentFilePath = fileName;
+    model->saveCsv(currentFilePath);
+}
+
+void MainWindow::saveFile() {
+    if (currentFilePath.isEmpty()) {
+        saveFileAs();
+        return;
+    }
+    model->saveCsv(currentFilePath);
+}
+
+bool MainWindow::maybeSave() {
+    if(!model->isModified()) {
+        return true;
+    }
+
+    auto reply = QMessageBox::question(
+        this,
+        "New File",
+        "You have unsaved work. Do You want to Save it?",
+        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel
+        );
+
+    if (reply == QMessageBox::No) {
+        return true;
+    }
+
+    if (reply == QMessageBox::Yes) {
+        saveFile();
+        return true;
+    }
+
+    return false;
 }
 
 void MainWindow::on_actionExit_triggered()
@@ -58,20 +100,7 @@ void MainWindow::on_actionInfo_triggered()
 void MainWindow::on_action_New_triggered()
 {
     if(model->isModified()) {
-        auto reply = QMessageBox::question(
-            this,
-            "New File",
-            "You have unsaved work. Do You want to Save it?",
-            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel
-            );
-
-        if (reply == QMessageBox::Cancel) {
-            return;
-        }
-
-        if (reply == QMessageBox::Yes) {
-            saveFile();
-        }
+        maybeSave();
     }
 
     model->clear();
@@ -95,5 +124,24 @@ void MainWindow::on_action_Open_triggered()
         this->setWindowTitle(currentFilePath);
         MainWindow::updateWindowTitle();
     }
+}
+
+
+void MainWindow::on_action_Save_triggered()
+{
+    saveFile();
+    model->setModified(false);
+}
+
+
+void MainWindow::on_actionSave_As_triggered()
+{
+    saveFileAs();
+}
+
+
+void MainWindow::on_actionNew_Student_triggered()
+{
+
 }
 

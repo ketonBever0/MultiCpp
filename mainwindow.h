@@ -20,6 +20,12 @@ public:
 
     ~MainWindow() override;
 
+    bool maybeSave();
+
+    void saveFile();
+
+    void saveFileAs();
+
 private slots:
     void on_actionInfo_triggered();
 
@@ -28,6 +34,10 @@ private slots:
     void on_action_New_triggered();
 
     void on_action_Open_triggered();
+
+    void on_action_Save_triggered();
+
+    void on_actionSave_As_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -41,6 +41,8 @@ public:
     void clear();
 
     void loadFromCsv(QString path);
+
+    void saveCsv(const QString& path);
 };
 
 #endif // CSVTABLEMODEL_H

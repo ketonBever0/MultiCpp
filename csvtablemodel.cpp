@@ -80,6 +80,8 @@ void CsvTableModel::clear() {
     endResetModel();
 }
 
+
+
 void CsvTableModel::loadFromCsv(QString path) {
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -98,16 +100,39 @@ void CsvTableModel::loadFromCsv(QString path) {
     while (!in.atEnd()) {
         QString read = in.readLine();
 
-        auto line = read.split(';');
+        auto line = read.split(',');
 
         if (line.size() == 5) {
-            auto s = Student(line.at(0), line.at(0), line.at(0), line.at(0), line.at(0));
+            auto s = Student(line.at(0), line.at(1), line.at(2), line.at(3), line.at(4));
             rows.append(s);
         }
 
     }
 
+    file.close();
     setModified(false);
     endResetModel();
 
 }
+
+void CsvTableModel::saveCsv(const QString& path) {
+    QFile file(path);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return;
+    }
+
+    QTextStream out(&file);
+    out << "ID;CARD_NUMBER;NAME;TRAINING_METHOD;TOKEN" << "\n";
+
+    for (Student& s : rows) {
+        out << s.toRow() << "\n";
+    }
+
+    file.close();
+    setModified(false);
+
+
+}
+
+
+

@@ -16,6 +16,7 @@ public:
 
     explicit Student(QString id, QString cardNumber, QString name, QString trainingMethod, QString token);
 
+    QString toRow(const QChar& d = ',') const;
 
 
 };
