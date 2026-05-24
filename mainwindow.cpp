@@ -37,6 +37,32 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event) {
+    if (model->isModified()) {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(
+            this,
+            "Unsaved changes",
+            "You have unsaved changes. Do you want to save before exiting?",
+            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel
+            );
+
+        if (reply == QMessageBox::Yes) {
+            saveFile();
+            event->accept();
+        }
+        else if (reply == QMessageBox::No) {
+            event->accept();
+        }
+        else {
+            event->ignore();
+        }
+    }
+    else {
+        event->accept();
+    }
+}
+
 void MainWindow::updateWindowTitle(bool modified = false) {
     QString title = currentFilePath.isEmpty() ? "Untitled" : QFileInfo(currentFilePath).fileName();
     if (modified) title = '*' + title;

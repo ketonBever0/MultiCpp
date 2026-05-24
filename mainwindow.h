@@ -23,6 +23,8 @@ public:
 
     void keyPressEvent(QKeyEvent *event) override;
 
+    void closeEvent(QCloseEvent *event) override;
+
     void openEditDialog(const QModelIndex& index);
 
     bool maybeSave();
