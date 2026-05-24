@@ -6,6 +6,14 @@ CsvTableModel::CsvTableModel(QObject *parent)
     : QAbstractTableModel{parent}
 {}
 
+QMap<QString, QString> CsvTableModel::methods = {
+    {"F", "Full-time"},
+    {"P", "Part-time"},
+    {"D", "Distance Learning"},
+    {"E", "Evening"},
+    {"O", "Other"}
+    };
+
 int CsvTableModel::rowCount(const QModelIndex&) const { return rows.size(); }
 int CsvTableModel::columnCount(const QModelIndex&) const { return columnHeaders.size(); }
 
@@ -25,11 +33,15 @@ QVariant CsvTableModel::data(const QModelIndex& index, int role) const {
         case 1: return s.cardNumber;
         case 2: return s.name;
         case 3: return s.trainingMethod;
-        case 4: return s.token;
+        case 4: return s.token.isEmpty() ? "" : "YES";
         default: break;
         }
     }
     return {};
+}
+
+const Student& CsvTableModel::rowAt(const int& i) const {
+    return rows.at(i);
 }
 
 bool CsvTableModel::setData(const QModelIndex& index, const QVariant& value, int role) {
@@ -59,6 +71,29 @@ void CsvTableModel::addData(const Student& s) {
     endInsertRows();
     setModified(true);
 }
+
+void CsvTableModel::updateData(const int& row, const Student& s) {
+    if (row < 0 || row >= rows.size()) return;
+
+    rows[row] = s;
+
+    emit dataChanged(index(row, 0), index(row, columnCount() - 1));
+
+    setModified(true);
+}
+
+void CsvTableModel::deleteData(const int& row)
+{
+    if (row < 0 || row >= rows.size())
+        return;
+
+    beginRemoveRows(QModelIndex(), row, row);
+    rows.removeAt(row);
+    endRemoveRows();
+
+    setModified(true);
+}
+
 
 Qt::ItemFlags CsvTableModel::flags(const QModelIndex& index) const {
     return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;

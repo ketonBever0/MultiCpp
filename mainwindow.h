@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QKeyEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,11 +21,18 @@ public:
 
     ~MainWindow() override;
 
+    void keyPressEvent(QKeyEvent *event) override;
+
+    void openEditDialog(const QModelIndex& index);
+
     bool maybeSave();
 
     void saveFile();
 
     void saveFileAs();
+
+    void deleteRow();
+
 
 private slots:
     void on_actionInfo_triggered();
@@ -38,6 +46,10 @@ private slots:
     void on_action_Save_triggered();
 
     void on_actionSave_As_triggered();
+
+    void on_actionNew_Student_triggered();
+
+    void on_sTable_activated(const QModelIndex &index);
 
 private:
     Ui::MainWindow *ui;

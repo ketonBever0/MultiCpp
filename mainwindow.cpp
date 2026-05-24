@@ -3,6 +3,7 @@
 #include "QTableView"
 
 #include "QMessageBox"
+#include "addrowdialog.h"
 #include "csvtablemodel.h"
 
 #include <QFileDialog>
@@ -24,6 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(model, &CsvTableModel::modifiedChanged, this, &MainWindow::updateWindowTitle);
 
     MainWindow::updateWindowTitle(false);
+
+    ui->sTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
 
 }
 
@@ -85,6 +89,53 @@ bool MainWindow::maybeSave() {
     return false;
 }
 
+void MainWindow::openEditDialog(const QModelIndex& index) {
+
+    static bool inDialog = false;
+    if (!index.isValid()) {
+        inDialog = false;
+        return;
+    }
+    if (inDialog) return;
+
+    inDialog = true;
+
+    int row = index.row();
+    AddRowDialog dlg(model->rowAt(row), this);
+
+    if (dlg.exec() == QDialog::Accepted) {
+        model->updateData(row, dlg.entry());
+    }
+
+    inDialog = false;
+
+}
+
+void MainWindow::deleteRow() {
+    QModelIndex index = ui->sTable->currentIndex();
+    if(!index.isValid()) return;
+
+    auto row = index.row();
+
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(
+        this,
+        "Delete student",
+        "Do you want to delete " + model->rows.at(row).name + "?",
+        QMessageBox::Yes | QMessageBox::No
+        );
+
+    if (reply == QMessageBox::Yes) model->deleteData(row);
+}
+
+
+// Triggers
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
+        deleteRow();
+    }
+}
+
 void MainWindow::on_actionExit_triggered()
 {
     close();
@@ -142,6 +193,18 @@ void MainWindow::on_actionSave_As_triggered()
 
 void MainWindow::on_actionNew_Student_triggered()
 {
-
+    Student s;
+    AddRowDialog dlg(s, this);
+    if (dlg.exec() == QDialog::Accepted) {
+        model->addData(dlg.entry());
+    }
 }
+
+
+
+void MainWindow::on_sTable_activated(const QModelIndex &index)
+{
+    openEditDialog(index);
+}
+
 

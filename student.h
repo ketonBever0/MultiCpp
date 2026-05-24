@@ -1,6 +1,3 @@
-// #ifndef
-// #define
-
 #include <QString>
 
 class Student
@@ -20,5 +17,3 @@ public:
 
 
 };
-
-// #endif //
