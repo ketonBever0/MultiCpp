@@ -51,6 +51,10 @@ private slots:
 
     void on_sTable_activated(const QModelIndex &index);
 
+    void on_actionEdit_triggered();
+
+    void on_action_Delete_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

@@ -208,3 +208,15 @@ void MainWindow::on_sTable_activated(const QModelIndex &index)
 }
 
 
+
+void MainWindow::on_actionEdit_triggered()
+{
+    openEditDialog(ui->sTable->currentIndex());
+}
+
+
+void MainWindow::on_action_Delete_triggered()
+{
+    deleteRow();
+}
+

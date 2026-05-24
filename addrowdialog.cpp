@@ -16,7 +16,7 @@ AddRowDialog::AddRowDialog(const Student& s, QWidget *parent)
     ui->idTB->setText(s.id);
     ui->cardNumberTB->setText(s.cardNumber);
     ui->nameTB->setText(s.name);
-    ui->methodCB->setCurrentText(s.trainingMethod == "" ? "Full-time" : s.trainingMethod);
+    ui->methodCB->setCurrentText(s.trainingMethod == "" ? "Full-time" : CsvTableModel::methods.value(s.trainingMethod));
     ui->tokenTB->setText(s.token);
 }
 
