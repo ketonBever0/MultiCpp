@@ -28,3 +28,4 @@ szeretném a tokeneket nyomon követni és saját metódus alapján generálni �
 
 1. Nyissuk meg projektként a `CMakeLists.txt` fájlt.
 2. Indítsuk el a programot.
+3. Használjuk teszteléshez a gyökérmappában lévő `.csv` fájlokat.
